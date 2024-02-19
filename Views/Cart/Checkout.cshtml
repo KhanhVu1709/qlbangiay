@@ -1,0 +1,262 @@
+﻿@{
+    Layout = null;
+	List<Item> cart = ViewBag.Cart as List<Item>;
+}
+@using QlBanGiay.Models
+
+@functions{
+	QLBanGiayContext db = new QLBanGiayContext();
+	public User getUserByUserName(string userName)
+	{
+		User user = db.Users.FirstOrDefault(u => u.TaiKhoan == userName);
+		return user;
+	}
+}
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>Footwear - Free Bootstrap 4 Template by Colorlib</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Rokkitt:100,300,400,700" rel="stylesheet">
+
+	<!-- Animate.css -->
+	<link rel="stylesheet" href="../WebGiay/css/animate.css">
+	<!-- Icomoon Icon Fonts-->
+	<link rel="stylesheet" href="../WebGiay/css/icomoon.css">
+	<!-- Ion Icon Fonts-->
+	<link rel="stylesheet" href="../WebGiay/css/ionicons.min.css">
+	<!-- Bootstrap  -->
+	<link rel="stylesheet" href="../WebGiay/css/bootstrap.min.css">
+
+	<!-- Magnific Popup -->
+	<link rel="stylesheet" href="../WebGiay/css/magnific-popup.css">
+
+	<!-- Flexslider  -->
+	<link rel="stylesheet" href="../WebGiay/css/flexslider.css">
+
+	<!-- Owl Carousel -->
+	<link rel="stylesheet" href="../WebGiay/css/owl.carousel.min.css">
+	<link rel="stylesheet" href="../WebGiay/css/owl.theme.default.min.css">
+
+	<!-- Date Picker -->
+	<link rel="stylesheet" href="../WebGiay/css/bootstrap-datepicker.css">
+	<!-- Flaticons  -->
+	<link rel="stylesheet" href="../WebGiay/fonts/flaticon/font/flaticon.css">
+
+	<!-- Theme style  -->
+	<link rel="stylesheet" href="../WebGiay/css/style.css">
+	<style>
+		.cart-detail ul li {
+			display: flex;
+			font-size: 13px;
+		}
+	</style>
+</head>
+<body>
+
+	<div class="colorlib-loader"></div>
+
+	<div id="page">
+		<nav class="colorlib-nav" role="navigation">
+			@await Html.PartialAsync("_PartialHeader")
+		</nav>
+
+		<div class="breadcrumbs">
+			<div class="container">
+				<div class="row">
+					<div class="col">
+						<p class="bread"><span><a href="/products/trangchu">Trang chủ</a></span> / <span>Thủ tục thanh toán</span></p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="colorlib-product">
+			<div class="container">
+				<div class="row row-pb-lg">
+					<div class="col-sm-10 offset-md-1">
+						<div class="process-wrap">
+							<div class="process text-center active">
+								<p><span>01</span></p>
+								<h3>Giỏ hàng</h3>
+							</div>
+							<div class="process text-center active">
+								<p><span>02</span></p>
+								<h3>Thủ tục thanh toán</h3>
+							</div>
+							<div class="process text-center">
+								<p><span>03</span></p>
+								<h3>Đặt hàng thành công</h3>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					
+						@{
+							var u = getUserByUserName(@Context.Session.GetString("taikhoan"));
+						}
+						<form id="checkoutForm" method="post" action="/cart/checkout" class="colorlib-form" enctype="multipart/form-data">
+							<div class="col-lg-8">
+								<h2>Chi tiết đơn hàng</h2>
+								<div class="row">
+									<div class="col-md-12">
+										<div class="form-group">
+											<input type="hidden" name="id" class="form-control" value="@u.Id">
+										</div>
+									</div>
+
+									<div class="col-md-12">
+										<div class="form-group">
+											<label for="hoTen">Họ và tên</label>
+											<input type="text" name="hoTen" id="fname" class="form-control" value="@u.HoTen" disabled>
+										</div>
+									</div>
+
+									<div class="col-md-12">
+										<div class="form-group">
+											<label for="diaChi">Địa chỉ</label>
+											<input type="text" name="diaChi" id="address" class="form-control" value="@u.DiaChi" disabled>
+										</div>
+									</div>
+
+									<div class="col-md-6">
+										<div class="form-group">
+											<label for="sdt">Số điện thoại</label>
+											<input type="text" name="sdt" id="zippostalcode" class="form-control" value="@u.Sdt" disabled>
+										</div>
+									</div>
+
+									<div class="col-md-6">
+										<div class="form-group">
+											<label for="ngayDat">Ngày đặt</label>
+											<input type="text" name="ngayDat" id="zippostalcode" class="form-control" value="@DateTime.Now">
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-lg-4">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="cart-detail">
+											<h2>Thông tin giỏ hàng</h2>
+											<ul>
+												<li><span>Tồng tiền gốc: @string.Format("{0:N0} VNĐ", Cart.CartTotal(Context.Session))</span></li>
+												<li>
+													<ul>
+														@foreach (var line in cart)
+														{
+															<li><span>@line.soLuong x @line.sanPham.TenSp @line.kichThuoc.SoDo</span> <span>@string.Format("{0:N0} VNĐ", line.sanPham.Gia)</span></li>
+														}
+													</ul>
+												</li>
+												<li><span>Phí vận chuyển</span> <span>30,000 VNĐ</span></li>
+												<li><span>Tổng đơn</span> <span>@string.Format("{0:N0} VNĐ", Cart.CartTotal(Context.Session) + 30000)</span></li>
+											</ul>
+										</div>
+									</div>
+
+									<div class="w-100"></div>
+
+									<div class="col-md-12">
+										<div class="cart-detail">
+											<h2>Payment Method</h2>
+											<div class="form-group">
+												<div class="col-md-12">
+													<div class="radio">
+													<label><input type="radio" name="paymentMethod" id="vnpayOption"> Thanh toán VNPay</label>
+													</div>
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="col-md-12">
+													<div class="radio">
+														<label><input type="radio" name="paymentMethod" id="codOption" checked> Trực tiếp khi nhận hàng</label>
+													</div>
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="col-md-12">
+													<div class="checkbox">
+														<label><input type="checkbox" id="agreeCheckbox" value="" checked> Tôi đã đọc và chấp nhận các điều khoản và điều kiện</label>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12 text-center">
+										<input type="submit" name="payment" id="paymentButton" class="btn btn-primary" value="Đặt mua">
+									</div>
+								</div>
+							</div>
+						</form>
+					
+
+					
+				</div>
+			</div>
+		</div>
+
+		@await Html.PartialAsync("_PartialFooter")
+	</div>
+
+	<div class="gototop js-top">
+		<a href="#" class="js-gotop"><i class="ion-ios-arrow-up"></i></a>
+	</div>
+
+	<!-- jQuery -->
+	<script src="../WebGiay/js/jquery.min.js"></script>
+	<!-- popper -->
+	<script src="../WebGiay/js/popper.min.js"></script>
+	<!-- bootstrap 4.1 -->
+	<script src="../WebGiay/js/bootstrap.min.js"></script>
+	<!-- jQuery easing -->
+	<script src="../WebGiay/js/jquery.easing.1.3.js"></script>
+	<!-- Waypoints -->
+	<script src="../WebGiay/js/jquery.waypoints.min.js"></script>
+	<!-- Flexslider -->
+	<script src="../WebGiay/js/jquery.flexslider-min.js"></script>
+	<!-- Owl carousel -->
+	<script src="../WebGiay/js/owl.carousel.min.js"></script>
+	<!-- Magnific Popup -->
+	<script src="../WebGiay/js/jquery.magnific-popup.min.js"></script>
+	<script src="../WebGiay/js/magnific-popup-options.js"></script>
+	<!-- Date Picker -->
+	<script src="../WebGiay/js/bootstrap-datepicker.js"></script>
+	<!-- Stellar Parallax -->
+	<script src="../WebGiay/js/jquery.stellar.min.js"></script>
+	<!-- Main -->
+	<script src="../WebGiay/js/main.js"></script>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			var paymentButton = document.getElementById("paymentButton");
+			var vnpayOption = document.getElementById("vnpayOption");
+			var codOption = $("#codOption");
+
+			vnpayOption.addEventListener("change", function () {
+				if (vnpayOption.checked) {
+					paymentButton.value = "Thanh toán VNPay";
+				}
+			});
+
+			codOption.addEventListener("change", function () {
+				if (codOption.checked) {
+					paymentButton.value = "Đặt mua";
+				}
+			});
+		});
+	</script>
+
+</body>
+</html>
+
+

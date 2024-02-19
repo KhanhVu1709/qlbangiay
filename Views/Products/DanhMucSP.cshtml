@@ -1,0 +1,121 @@
+﻿@{
+    ViewData["Title"] = "DanhMucSP";
+    Layout = "~/Views/Shared/_LayoutDanhMucSP.cshtml";
+}
+@using X.PagedList.Mvc.Core
+@model X.PagedList.IPagedList<SanPham>
+
+<style>
+	.pagination {
+		justify-content: center;
+	}
+</style>
+
+@*<form id="price-filter-form">
+	<div class="form-group" style="width: 25%; display: flex">
+		<h3>Tìm theo giá</h3>
+		<input type="checkbox" name="price" value="all"> Toàn bộ
+		<input type="checkbox" name="price" value="0-200000"> 0 VNĐ - 200,000 VNĐ
+		<input type="checkbox" name="price" value="200001-500000"> 200,001 VNĐ - 500,000 VNĐ
+		<input type="checkbox" name="price" value="500001-1000000"> 500,001 VNĐ - 1,000,000 VNĐ
+		<input type="checkbox" name="price" value="1000001-1500000"> 1,000,001 VNĐ - 1,500,000 VNĐ
+		<input type="checkbox" name="price" value="1500001-2000000"> 1,500,001 VNĐ - 2,000,000 VNĐ
+	</div>
+</form>
+<button id="btnFilter" class="btn btn-primary submit-search text-center" type="submit"><i class="icon-search"></i></button>*@
+
+<div class="row">
+	<div class="col-sm-8 offset-sm-2 text-center colorlib-heading colorlib-heading-sm">
+		<h2>Tất cả sản phẩm</h2>
+	</div>
+</div>
+<div class="row row-pb-md" id="filtered-products">
+	@foreach (var product in Model)
+	{
+		<div class="col-md-3 col-lg-3 mb-4 text-center">
+			<div class="product-entry border">
+				<a href="/products/chitietsp?id=@product.Id" class="prod-img">
+					<img src="@Url.Content("~/Images/"+product.Anh)" class="img-fluid" alt="Free html5 bootstrap 4 template">
+				</a>
+				<div class="desc">
+					<h2><a href="/products/chitietsp?id=@product.Id">@product.TenSp</a></h2>
+					<span class="price">@string.Format("{0:N0} VNĐ", product.Gia)</span>
+				</div>
+			</div>
+		</div>
+	}
+</div>
+
+<div class="row" style="margin: auto;">
+	<div class="col-md-12 text-center">
+		@Html.PagedListPager(Model, page => Url.Action("DanhMucSP", new { page = page, searchString = ViewBag.SearchString }), new X.PagedList.Web.Common.PagedListRenderOptions()
+		{
+			LiElementClasses = new List<String> { "page-item" },
+			PageClasses = new List<String> { "page-link" }
+		})
+	</div>
+</div>
+
+@*<div class="row">
+	<div class="col-md-12 text-center">
+		<div class="block-27">
+			<ul>
+				<li><a href="#"><i class="ion-ios-arrow-back"></i></a></li>
+				@if (Model.HasPreviousPage)
+				{
+					<li class="active"><a href="?page=1">First</a></li>
+				}
+
+				@for (int i = 1; i <= Model.PageCount; i++)
+				{
+					<li><a href="?page=@i">@i</a></li>
+				}
+
+				@if (Model.HasNextPage)
+				{
+					<li><a href="?page=@Model.PageCount">Last</a></li>
+				}
+				<li><a href="#"><i class="ion-ios-arrow-forward"></i></a></li>
+			</ul>
+		</div>
+	</div>
+</div>*@
+
+<script>
+	document.getElementById('btnFilter').addEventListener("click", function() {
+		var priceRange = getSelectedCheckboxes("price-filter-form");
+		console.log(priceRange);
+		var data = {
+			Price: priceRange,
+		}
+
+		fetch("/Products/GetFilterProducts", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify(data)
+		}).then(function(response){
+			if(response.ok) {
+				return response.text();
+			} else {
+				throw new Error("Error sending data to the controller")
+			}
+		}).then(function(results) {
+			$("#filtered-products").html(results);
+		})
+		
+		.catch(function(error) {
+			console.log("An error occured: ", error);
+		})	
+	});
+
+	function getSelectedCheckboxes(formId) {
+		var checkboxes = document.querySelectorAll('#' + formId + ' input[type="checkbox"]:checked');
+		var values = []
+		checkboxes.forEach(function(checkbox) {
+			values.push(checkbox.value)
+		});
+		return values;
+	}
+</script>

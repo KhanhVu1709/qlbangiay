@@ -1,0 +1,182 @@
+﻿@{
+    Layout = null;
+}
+
+@using QlBanGiay.Models
+@using QlBanGiay.Areas.Admin.Models
+@model QlBanGiay.Areas.Admin.Models.ChiTietGiaoDich
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>@ViewData</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap 4 -->
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="http://localhost/vat-lieu-xay-dung/public/admin/plugins/fontawesome-free/css/all.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="http://localhost/vat-lieu-xay-dung/public/admin/dist/css/adminlte.min.css">
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="http://localhost/vat-lieu-xay-dung/public/admin/dist/css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+</head>
+<body>
+    <div class="container">
+        <section class="col-12" style="margin-top: 15px">
+            <!-- title row -->
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="page-header">
+                        <i class="bx bx-world"></i> AdminRmsport
+                        <small class="float-right">2024-01-07</small>
+                    </h2>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- info row -->
+            <div class="row invoice-info">
+                <div class="col-sm-4 invoice-col">
+                    Người gửi
+                    <address>
+                        <strong>Admin, Inc.</strong><br>
+                        22 Dương Quảng Hàm<br>
+                        phường Quan Hoa, quận Cầu Giấy<br>
+                        Phone: 0379678451<br>
+                        Email: rmsportfootball21@gmail.com
+
+                    </address>
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-4 invoice-col">
+                    Người nhận
+                    <address>
+                        <strong>@Model.HoTen</strong><br>
+                        Phone: @Model.Sdt<br>
+                        Email: @Model.Email<br>
+                        Địa chỉ : @Model.DiaChi <br>
+                    </address>
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-4 invoice-col">
+                    Thông tin giao dịch
+                    <address>
+                        <b>Mã giao dịch: @Model.IdHoaDon</b><br>
+                        <span>Mã tài khoản :</span> @Model.IdTaiKhoan<br>
+                        <span>Trạng thái : @Model.TrangThai</span><br>
+                        <span>PT thanh toán :  <span>Nhận hàng</span> </span>
+                    </address>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+            <!-- Table row -->
+            <div class="row">
+                <div class="col-12 table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Sản phẩm</th>
+                                <th>Kích thước</th>
+                                <th class="text-center">Số lượng</th>
+                                <th>Giá</th>
+                                <th>Tổng tiền</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+
+
+                            @{
+                                int i = 0;
+                            }
+                            @foreach (var item in ViewBag.chiTiet)
+                            {
+                                i += 1;
+                                <tr>
+                                    <td style="vertical-align: middle;">@i</td>
+                                    <td style="vertical-align: middle;">
+                                        @item.TenSP
+                                        <ul class="list-invoice">
+                                        </ul>
+                                    </td>
+                                    <td class="text-center" style="vertical-align: middle;">@item.KichThuocSP</td>
+                                    <td class="text-center" style="vertical-align: middle;">@item.SoLuong</td>
+                                    <td style="vertical-align: middle;">
+                                        @string.Format("{0:N0} VNĐ", item.GiaSP)
+                                    </td>
+                                    <td style="vertical-align: middle;">@string.Format("{0:N0} VNĐ", item.GiaSP * item.SoLuong)</td>
+                                    <td style ="vertical-align: middle;">
+                                        <button class="@(item.TrangThaiSP == "Tiếp nhận" ? "btn btn-block btn-success btn-xs" : (item.TrangThaiSP == "Đang giao hàng" ? "btn btn-block btn-info btn-xs" : (item.TrangThaiSP == "Đã giao hàng" ? "btn btn-block btn-warning btn-xs" : "")))">@item.TrangThaiSP</button>
+                                    </td>
+                                </tr>
+                            }
+                            
+
+
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+
+            <div class="row">
+                <!-- accepted payments column -->
+                <div class="col-6">
+                </div>
+                <!-- /.col -->
+                <div class="col-6">
+                    <p class="lead"></p>
+
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tr>
+                                <th style="width:50%">Phí vận chuyển:</th>
+                                <td>20.000 vnđ</td>
+                            </tr>
+                            <tr>
+                                <th style="width:50%">Thuế :</th>
+                                <td>182.500 vnđ</td>
+                            </tr>
+                            <tr>
+                                <th style="width:50%">Tổng tiền:</th>
+                                <td>@string.Format("{0:N0} VNĐ", Model.TongGiaTri + 20000 + 182500)</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <!-- /.col -->
+            </div>
+            <div class="row">
+                <div class="col-6 text-center">
+                    <p><b>Nhân viên giao hàng</b></p>
+                    <p style="font-size: 12px;">( Ký ghi rõ họ tên )</p>
+                </div>
+                <div class="col-6 text-center">
+                    <p><b>Khách hàng</b></p>
+                    <p style="font-size: 12px;">( Ký ghi rõ họ tên )</p>
+                </div>
+            </div>
+            <!-- /.row -->
+            <div class="row no-print">
+                <div class="col-12">
+                    <button type="button" class="btn btn-success" onclick="window.print()"><i class="bx bx-printer"></i> Print </button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script type="text/javascript">
+        //window.addEventListener("load", window.print());
+    </script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+﻿@{
+    Layout = "~/Views/Shared/_TrangChu.cshtml";
+}
+
+@using X.PagedList.Mvc.Core
+@model X.PagedList.PagedList<SanPham>
+
+<style>
+	.pagination-container {
+		margin: auto;
+	}
+</style>
+
+@foreach(var product in Model)
+{
+	<div class="col-lg-3 mb-4 text-center">
+		<div class="product-entry border">
+			<a href="/products/chitietsp?id=@product.Id" class="prod-img">
+				<img src="@Url.Content("~/Images/"+ product.Anh)" class="img-fluid" alt="Free html5 bootstrap 4 template">
+			</a>
+			<div class="desc">
+				<h2><a href="../products/ChiTietSp?id=@product.Id">@product.TenSp</a></h2>
+				<span class="price">@string.Format("{0:N0} VNĐ", product.Gia)</span>
+			</div>
+		</div>
+	</div>
+}
+
+<div class="row" style="margin: auto;">
+	<div class="col-md-12 text-center">
+		@Html.PagedListPager(Model, page => Url.Action("TrangChu", new { page = page, searchString = ViewBag.SearchString }), new X.PagedList.Web.Common.PagedListRenderOptions()
+		{
+			LiElementClasses = new List<String> { "page-item" },
+			PageClasses = new List<String> { "page-link" }
+		})
+	</div>
+</div>
+

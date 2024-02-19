@@ -1,0 +1,69 @@
+﻿@{
+    Layout = null;
+}
+@model QlBanGiay.Models.User;
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../LayoutLogin/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" integrity="sha512-5A8nwdMOWrSz20fDsjczgUidUBR8liPYU+WymTZP1lmY9G6Oc7HlZv156XqnsgNUzTyMefFTcsFH/tnJE/+xBg==" crossorigin="anonymous" />
+</head>
+<body>
+    <!-- Form without bootstrap -->
+    <div class="auth-wrapper">
+        <div class="auth-container">
+            <div class="auth-action-left">
+                <div class="auth-form-outer">
+                    <h2 class="auth-form-title">
+                        Đăng nhập
+                    </h2>
+                    <div class="auth-external-container">
+                        <div class="auth-external-list">
+                            <ul>
+                                <li><a href="#"><i class="fa fa-google"></i></a></li>
+                                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                                <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+                    {
+                        @TempData["SaiMK"]
+                        @TempData["baned"]
+                        @Html.ValidationMessageFor(temp => temp.TaiKhoan)
+                        @Html.TextBoxFor(temp => temp.TaiKhoan, new {@class="auth-form-input", placeholder="Tài khoản", name="taikhoan"})
+                        <div class="input-icon">
+                            @Html.ValidationMessageFor(temp => temp.MatKhau)
+                            @Html.TextBoxFor(temp => temp.MatKhau, new {@class="auth-form-input", placeholder="Mật khẩu", type="password", name="matkhau"})
+                            <i class="fa fa-eye show-password"></i>
+                        </div>
+                        <label class="btn active">
+                            <input type="checkbox" name='email1' checked>
+                            <i class="fa fa-square-o"></i><i class="fa fa-check-square-o"></i>
+                            <span> Nhớ mật khẩu.</span>
+                        </label>
+                        <div class="footer-action">
+                            <input type="submit" value="Đăng nhập" class="auth-submit">
+                            <a asp-controller="account" asp-action="register" class="auth-btn-direct">Đăng ký</a>
+                        </div>
+                    }
+                    <div class="auth-forgot-password">
+                        <a href="#">Quên mật khẩu</a>
+                    </div>
+                </div>
+            </div>
+            <div class="auth-action-right">
+                <div class="auth-image">
+                    <img src="../LayoutLogin/assets/vector.jpg" alt="login">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../LayoutLogin/js/common.js"></script>
+</body>
+</html>

@@ -1,0 +1,231 @@
+﻿@model QlBanGiay.Models.SanPham
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "ThemSanPham";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    #them-anh {
+        background-color: red;
+        color: white;
+        padding: 8px
+    }
+
+    form {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .form-size {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-control {
+        border-radius: 5px;
+        /*border: 1px solid #ccc;*/
+        padding: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .form-check {
+        display: flex;
+        padding-left: 45px !important;
+    }
+
+    .form-check-label {
+        margin-left: 0.2rem !important;
+    }
+
+    .form-right {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .control-label {
+        font-weight: bolder !important;
+    }
+
+    .form-group input {
+        border: 1px solid black;
+    }
+
+    .left, .right {
+        background-color: white;
+        padding: 20px;
+        box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
+        border-radius: 0.25rem;
+    }
+
+    .right {
+        min-height: 450px;
+    }
+
+    .size {
+        display: inline-flex;
+    }
+</style>
+
+<hr />
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <form method="post" action="@ViewBag.action" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+
+            <div class="col-md-7 left">
+                <div class="form-group">
+                    <label asp-for="TenSp" class="control-label">Tên sản phẩm</label>
+                    <input asp-for="TenSp" name="TenSp" class="form-control" placeholder="Tên sản phẩm"/>
+                    <span asp-validation-for="TenSp" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SoLuong" class="control-label">Số lượng</label>
+                    <input asp-for="SoLuong" name="SoLuong" class="form-control" placeholder="Số lượng sản phẩm"/>
+                    <span asp-validation-for="SoLuong" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Gia" class="control-label">Giá</label>
+                    <input asp-for="Gia" name="Gia" class="form-control" placeholder="Giá sản phẩm"/>
+                    <span asp-validation-for="Gia" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ThoiGianBaoHanh" class="control-label">Thời gian bảo hành</label>
+                    <input asp-for="ThoiGianBaoHanh" name="ThoiGianBaoHanh" class="form-control" placeholder="Thời gian bảo hành"/>
+                    <span asp-validation-for="ThoiGianBaoHanh" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <div class="form-size">
+                        <label class="control-label">Chọn size</label>
+                        <div class="size">
+                            @if (ViewBag.sizeDaChon != null)
+                            {
+                                @foreach (var kich_thuoc in ViewBag.KichThuoc)
+                                {
+                                    <div class="form-check">
+                                        @{
+                                            var isSelected = false;
+                                        }
+
+                                        @foreach (var size in ViewBag.sizeDaChon)
+                                        {
+                                            @*lắp tới khi tim được kích thước mà sản phẩm đó có.*@
+                                            if (size == kich_thuoc.SoDo)
+                                            {
+                                                isSelected = true;
+                                                break;
+                                            }
+                                        }
+
+                                        @*sau khi tìm được sẽ đánh dấu checked vào thẻ input size*@
+                                        <input type="checkbox" @(isSelected ? "checked" : "") class="form-check-input" name="kichThuocs" value="@kich_thuoc.Id" id="@($"kichThuocs_{kich_thuoc.SoDo}")">
+                                        <label class="form-check-label" for="@($"kichThuocs_{kich_thuoc.SoDo}")">@kich_thuoc.SoDo</label>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                @foreach (var kich_thuoc in ViewBag.KichThuoc)
+                                {
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" name="kichThuocs" value="@kich_thuoc.Id" id="@($"kichThuocs_{kich_thuoc.SoDo}")">
+                                        <label class="form-check-label" for="@($"kichThuocs_{kich_thuoc.SoDo}")">@kich_thuoc.SoDo</label>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="form-group">
+                    <label asp-for="IdHang" class="control-label">Hãng</label>
+                    <select asp-for="IdHang" name="IdHang" class="form-control" asp-items="ViewBag.IdHang"></select>
+                </div>
+            </div>
+            <div class="col-md-4 right">
+                <div class="form-group">
+                    <div class="form-right">
+                        <label asp-for="Anh" class="control-label">Chọn ảnh</label>
+
+                        <div id="imageInputs">
+                            <input type="file" asp-for="Anh" name="photo" class="form-control" onchange="previewImage(event)" />
+                            <br />
+                        </div>
+                        <br />
+                        <button type="button" id="them-anh" onclick="addImageInput()">Thêm ảnh</button>
+                        <span asp-validation-for="Anh" class="text-danger"></span>
+                    </div>
+                    
+                </div>
+                <div class="form-group">
+                    <div class="form-right">
+                        <label class="control-label">Hình ảnh sản phẩm</label>
+                        <br />
+                        @if (Model != null && Model.Anh != null)
+                        {
+                            <img src="@Url.Content("~/Images/"+@Model.Anh)" id="imagePreview" alt="Hình ảnh sản phẩm" style="max-width: 200px; max-height: 200px; margin: auto;" />
+                        }
+                        else
+                        {
+                            <img src="~/Images/no-image.png" id="imagePreview" alt="Hình ảnh sản phẩm" style="max-width: 200px; max-height: 200px; margin: auto;" />
+                        }
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Lưu" class="btn btn-primary" />
+                </div>
+            </div>
+            
+        </form>
+    </div>
+</div>
+
+<script>
+    function previewImage(event) {
+        var input = event.target;
+        var imagePreview = document.getElementById('imagePreview');
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                imagePreview.src = e.target.result;
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // them anh
+    var imageInputCount = 1;
+
+    function addImageInput() {
+        var imageInputs = document.getElementById('imageInputs');
+        var newInput = document.createElement('div');
+        var input = document.createElement('input');
+        var deleteButton = document.createElement('button');
+
+        newInput.className = 'form-group';
+        input.type = 'file';
+        input.name = 'photo' + imageInputCount;
+        input.className = 'form-control';
+
+        deleteButton.textContent = 'Xóa';
+        deleteButton.type = 'button'; // Loại bỏ submit mặc định của button
+        deleteButton.onclick = function () {
+            newInput.remove();
+        };
+
+        newInput.appendChild(input);
+        newInput.appendChild(deleteButton);
+        imageInputs.appendChild(newInput);
+        imageInputCount++;
+    }
+</script>
+

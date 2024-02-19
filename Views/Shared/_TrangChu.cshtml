@@ -1,0 +1,198 @@
+﻿@using QlBanGiay.Models
+@functions{
+	QLBanGiayContext db = new QLBanGiayContext();
+	public List<Slide> getAllAnh()
+	{
+		List<Slide> slide = db.Slides.ToList(); 
+		return slide;
+	}
+}
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>Footwear - Free Bootstrap 4 Template by Colorlib</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Rokkitt:100,300,400,700" rel="stylesheet">
+
+	<!-- Animate.css -->
+	<link rel="stylesheet" href="../WebGiay/css/animate.css">
+	<!-- Icomoon Icon Fonts-->
+	<link rel="stylesheet" href="../WebGiay/css/icomoon.css">
+	<!-- Ion Icon Fonts-->
+	<link rel="stylesheet" href="../WebGiay/css/ionicons.min.css">
+	<!-- Bootstrap  -->
+	<link rel="stylesheet" href="../WebGiay/css/bootstrap.min.css">
+
+	<!-- Magnific Popup -->
+	<link rel="stylesheet" href="../WebGiay/css/magnific-popup.css">
+
+	<!-- Flexslider  -->
+	<link rel="stylesheet" href="../WebGiay/css/flexslider.css">
+
+	<!-- Owl Carousel -->
+	<link rel="stylesheet" href="../WebGiay/css/owl.carousel.min.css">
+	<link rel="stylesheet" href="../WebGiay/css/owl.theme.default.min.css">
+
+	<!-- Date Picker -->
+	<link rel="stylesheet" href="../WebGiay/css/bootstrap-datepicker.css">
+	<!-- Flaticons  -->
+	<link rel="stylesheet" href="../WebGiay/fonts/flaticon/font/flaticon.css">
+
+	<!-- Theme style  -->
+	<link rel="stylesheet" href="../WebGiay/css/style.css">
+
+</head>
+<body>
+
+	<div class="colorlib-loader"></div>
+
+	<div id="page">
+		<nav class="colorlib-nav" role="navigation">
+			@await Html.PartialAsync("_PartialHeader")
+		</nav>
+		<aside id="colorlib-hero">
+			<div class="flexslider">
+				<ul class="slides">
+					@foreach(var slide in getAllAnh())
+					{
+						@if(slide.IdTrangThai == 1)
+						{
+							<li style="background-image: url(../Images/Slide/@slide.Anh);">
+							@*<div class="overlay"></div>
+								<div class="container-fluid">
+									<div class="row">
+										<div class="col-sm-6 offset-sm-3 text-center slider-text">
+											<div class="slider-text-inner">
+												<div class="desc">
+													<h1 class="head-1">Men's</h1>
+													<h2 class="head-2">Shoes</h2>
+													<h2 class="head-3">Collection</h2>
+													<p class="category"><span>New trending shoes</span></p>
+													<p><a href="#" class="btn btn-primary">Shop Collection</a></p>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>*@
+							</li>
+						}
+					}
+				</ul>
+			</div>
+		</aside>
+		<div class="colorlib-intro">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-12 text-center">
+						<h2 class="intro">Nó bắt đầu với một ý tưởng đơn giản: Tạo ra những sản phẩm chất lượng, được thiết kế đẹp mắt mà bản thân tôi mong muốn.</h2>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="colorlib-product">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-sm-6 text-center">
+						<div class="featured">
+							<a href="#" class="featured-img" style="background-image: url(../WebGiay/images/men.jpg);"></a>
+							<div class="desc">
+								<h2><a href="#">Mua sắm bộ sưu tập nam</a></h2>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-6 text-center">
+						<div class="featured">
+							<a href="#" class="featured-img" style="background-image: url(../WebGiay/images/women.jpg);"></a>
+							<div class="desc">
+								<h2><a href="#">Mua sắm bộ sưu tập nữ</a></h2>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="colorlib-product">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-8 offset-sm-2 text-center colorlib-heading">
+						<h2>Bán chạy nhất</h2>
+					</div>
+				</div>
+				<div class="row row-pb-md" id="products">
+					@RenderBody()
+				</div>
+				<div class="row">
+					<div class="col-md-12 text-center">
+						<p><a href="#" class="btn btn-primary btn-lg">Tất cả sản phẩm</a></p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="colorlib-partner">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-8 offset-sm-2 text-center colorlib-heading colorlib-heading-sm">
+						<h2>Đối tác đáng tin cậy</h2>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col partner-col text-center">
+						<img src="../WebGiay/images/brand-1.jpg" class="img-fluid" alt="Free html4 bootstrap 4 template">
+					</div>
+					<div class="col partner-col text-center">
+						<img src="../WebGiay/images/brand-2.jpg" class="img-fluid" alt="Free html4 bootstrap 4 template">
+					</div>
+					<div class="col partner-col text-center">
+						<img src="../WebGiay/images/brand-3.jpg" class="img-fluid" alt="Free html4 bootstrap 4 template">
+					</div>
+					<div class="col partner-col text-center">
+						<img src="../WebGiay/images/brand-4.jpg" class="img-fluid" alt="Free html4 bootstrap 4 template">
+					</div>
+					<div class="col partner-col text-center">
+						<img src="../WebGiay/images/brand-5.jpg" class="img-fluid" alt="Free html4 bootstrap 4 template">
+					</div>
+				</div>
+			</div>
+		</div>
+
+		@await Html.PartialAsync("_PartialFooter")
+	</div>
+
+	<div class="gototop js-top">
+		<a href="#" class="js-gotop"><i class="ion-ios-arrow-up"></i></a>
+	</div>
+
+	<!-- jQuery -->
+	<script src="../WebGiay/js/jquery.min.js"></script>
+	<!-- popper -->
+	<script src="../WebGiay/js/popper.min.js"></script>
+	<!-- bootstrap 4.1 -->
+	<script src="../WebGiay/js/bootstrap.min.js"></script>
+	<!-- jQuery easing -->
+	<script src="../WebGiay/js/jquery.easing.1.3.js"></script>
+	<!-- Waypoints -->
+	<script src="../WebGiay/js/jquery.waypoints.min.js"></script>
+	<!-- Flexslider -->
+	<script src="../WebGiay/js/jquery.flexslider-min.js"></script>
+	<!-- Owl carousel -->
+	<script src="../WebGiay/js/owl.carousel.min.js"></script>
+	<!-- Magnific Popup -->
+	<script src="../WebGiay/js/jquery.magnific-popup.min.js"></script>
+	<script src="../WebGiay/js/magnific-popup-options.js"></script>
+	<!-- Date Picker -->
+	<script src="../WebGiay/js/bootstrap-datepicker.js"></script>
+	<!-- Stellar Parallax -->
+	<script src="../WebGiay/js/jquery.stellar.min.js"></script>
+	<!-- Main -->
+	<script src="../WebGiay/js/main.js"></script>
+
+</body>
+</html>
+
+

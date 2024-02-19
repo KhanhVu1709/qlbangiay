@@ -1,0 +1,158 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using QlBanGiay.Models
+@model QlBanGiay.Models.Slide
+
+@{
+    ViewData["Title"] = "FormCreateUpdateSlide";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@functions{
+    QLBanGiayContext db = new QLBanGiayContext();
+    public bool isCheckTrangThaiById(int idTrangThai)
+    {
+        var isCheck = (from s in db.Slides
+                       join t in db.TrangThaiSlides on s.IdTrangThai equals t.Id
+                       where s.IdTrangThai == idTrangThai
+                       select new
+                       {
+                           IdTrangThai = s.IdTrangThai,
+                       }).FirstOrDefault();
+        if (isCheck.IdTrangThai == 1)
+        {
+            return true;
+        }
+        return false;
+    }
+}
+
+<style>
+    #them-anh {
+        background-color: red;
+        color: white;
+        padding: 8px
+    }
+
+    form {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .form-right {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .control-label {
+        font-weight: bolder !important;
+    }
+
+    .form-group input {
+        border: 1px solid black;
+    }
+
+    .left, .right {
+        background-color: white;
+        padding: 20px;
+        box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
+        border-radius: 0.25rem;
+    }
+
+    .form-control {
+        border-radius: 5px;
+        /*border: 1px solid #ccc;*/
+        padding: 8px;
+        transition: all 0.3s ease;
+    }
+
+</style>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-12">
+        <form method="post" action="@ViewBag.action" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="col-md-7 left">
+                <div class="form-group">
+                    <label asp-for="Title" class="control-label">Tiêu đề</label>
+                    <input asp-for="Title" name="Title" class="form-control" placeholder="Tiêu đề"/>
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ViTri" class="control-label">Vị trí</label>
+                    <input type="number" asp-for="ViTri" name="ViTri" class="form-control" placeholder="Vị trí"/>
+                    <span asp-validation-for="ViTri" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Anh" class="control-label">Trạng thái</label>
+                    <br />
+                    @if (Model != null)
+                    {
+                        @foreach (var trang_thai in ViewBag.trangThaiSlide as List<TrangThaiSlide>)
+                        {
+                            <input type="radio" @(Model.IdTrangThai == trang_thai.Id ? "checked" : "") value="@trang_thai.Id" name="TrangThai" id="@trang_thai.Id" />
+                            <label for="@trang_thai.Id">@trang_thai.TenTrangThai</label>
+                            <br />
+                        }
+                    }
+                    else
+                    {
+                        @foreach (var trang_thai in ViewBag.trangThaiSlide as List<TrangThaiSlide>)
+                        {
+                            <input type="radio" value="@trang_thai.Id" name="TrangThai" id="@trang_thai.Id" />
+                            <label for="@trang_thai.Id">@trang_thai.TenTrangThai</label>
+                            <br />
+                        }
+                    }
+
+                </div>
+            </div>
+            <div class="col-md-4 right">
+                <div class="form-group">
+                    <label asp-for="Anh" class="control-label">Chọn ảnh</label>
+
+                    <div id="imageInputs">
+                        <input type="file" asp-for="Anh" name="photo" class="form-control" onchange="previewImage(event)" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-right">
+                        <label class="control-label">Hình ảnh sản phẩm</label>
+                        @if (Model != null && Model.Anh != null)
+                        {
+                            <img src="@Url.Content("~/Images/Slide/"+@Model.Anh)" id="imagePreview" alt="Hình ảnh sản phẩm" style="max-width: 200px; max-height: 200px;margin: auto;" />
+                        }
+                        else
+                        {
+                            <img src="~/Images/no-image.png" id="imagePreview" alt="Hình ảnh sản phẩm" style="max-width: 200px; max-height: 200px; margin: auto;" />
+                        }
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Lưu" class="btn btn-primary" />
+                </div>
+            </div>
+            
+        </form>
+    </div>
+</div>
+
+
+<script>
+    function previewImage(event) {
+        var input = event.target;
+        var imagePreview = document.getElementById('imagePreview');
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                imagePreview.src = e.target.result;
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
